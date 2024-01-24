@@ -27,6 +27,18 @@
       <div th:if="${#fields.hasErrors('username')}" class="text-danger" th:errors="*{username}"></div>
     </div>
     <div class="mb-3">
+      <input type="text" th:field="*{firstName}" class="form-control" placeholder="First Name">
+      <div th:if="${#fields.hasErrors('firstName')}" class="text-danger" th:errors="*{firstName}"></div>
+    </div>
+    <div class="mb-3">
+      <input type="text" th:field="*{lastName}" class="form-control" placeholder="Last Name">
+      <div th:if="${#fields.hasErrors('lastName')}" class="text-danger" th:errors="*{lastName}"></div>
+    </div>
+    <div class="mb-3">
+      <input type="text" th:field="*{email}" class="form-control" placeholder="Email">
+      <div th:if="${#fields.hasErrors('email')}" class="text-danger" th:errors="*{email}"></div>
+    </div>
+    <div class="mb-3">
       <input type="password" th:field="*{password}" class="form-control" placeholder="Password">
       <div th:if="${#fields.hasErrors('password')}" class="text-danger" th:errors="*{password}"></div>
     </div>
