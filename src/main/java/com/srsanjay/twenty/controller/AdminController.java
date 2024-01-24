@@ -1,6 +1,7 @@
 package com.srsanjay.twenty.controller;
 
 import com.srsanjay.twenty.model.User;
+import com.srsanjay.twenty.model.UserRole;
 import com.srsanjay.twenty.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -21,7 +22,7 @@ public class AdminController {
 
     @GetMapping("")
     public String adminPanel(Model model) {
-        List<User> users = userService.findAll();
+        List<User> users = userService.findByRole(UserRole.ROLE_USER);
         model.addAttribute("users", users);
         return "admin";
     }
