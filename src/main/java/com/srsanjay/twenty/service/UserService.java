@@ -1,5 +1,6 @@
 package com.srsanjay.twenty.service;
 
+import com.srsanjay.twenty.dto.PasswordDto;
 import com.srsanjay.twenty.dto.UpdateUserDto;
 import com.srsanjay.twenty.dto.UserDto;
 import com.srsanjay.twenty.model.User;
@@ -23,8 +24,9 @@ public class UserService {
     @Autowired
     PasswordEncoder passwordEncoder;
 
-    public String getCurrentUsername() {
-        return SecurityContextHolder.getContext().getAuthentication().getName();
+    public User getCurrentUser() {
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        return userRepository.findByUsername(username).get();
     }
 
     public void save(UserDto userDto) {
@@ -37,7 +39,7 @@ public class UserService {
     }
 
     public void update(UpdateUserDto updateUserDto) {
-        User user = userRepository.findByUsername(getCurrentUsername()).get();
+        User user = getCurrentUser();
         user.setFirstName(updateUserDto.getFirstName());
         user.setLastName(updateUserDto.getLastName());
         user.setEmail(updateUserDto.getEmail());
@@ -77,6 +79,20 @@ public class UserService {
 
         User user = userOptional.get();
         user.setEnabled(true);
+        userRepository.save(user);
+    }
+
+    public boolean validateOldPassword(PasswordDto passwordDto) {
+        return passwordEncoder.matches(passwordDto.getOldPassword(), getCurrentUser().getPassword());
+    }
+
+    public boolean validateNewPasswords(PasswordDto passwordDto) {
+        return passwordDto.getNewPassword().equals(passwordDto.getReenterNewPassword());
+    }
+
+    public void changePassword(PasswordDto passwordDto) {
+        User user = getCurrentUser();
+        user.setPassword(passwordEncoder.encode(passwordDto.getNewPassword()));
         userRepository.save(user);
     }
 

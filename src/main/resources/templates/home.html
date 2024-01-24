@@ -47,9 +47,10 @@
   <hr>
 
   <a th:href="@{/update}" class="btn btn-secondary mb-3">Update Profile</a>
+  <a th:href="@{/changePassword}" class="btn btn-secondary mb-3">Change Password</a>
 
   <div>
-    <p th:if="${update}" class="alert alert-info" role="alert" th:text="${update}"></p>
+    <p th:if="${alert}" class="alert alert-info" role="alert" th:text="${alert}"></p>
   </div>
 
 </div>

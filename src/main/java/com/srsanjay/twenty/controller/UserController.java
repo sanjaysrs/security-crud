@@ -1,5 +1,6 @@
 package com.srsanjay.twenty.controller;
 
+import com.srsanjay.twenty.dto.PasswordDto;
 import com.srsanjay.twenty.dto.UpdateUserDto;
 import com.srsanjay.twenty.dto.UserDto;
 import com.srsanjay.twenty.model.User;
@@ -60,7 +61,38 @@ public class UserController {
         userService.update(updateUserDto);
         User user = userService.findByUsername(getCurrentUsername()).get();
         session.setAttribute("user", user);
-        redirectAttributes.addFlashAttribute("update", "Profile updated successfully");
+        redirectAttributes.addFlashAttribute("alert", "Profile updated successfully");
+        return "redirect:/home";
+    }
+
+    @GetMapping("/changePassword")
+    public String changePassword(Model model) {
+        model.addAttribute("passwordDto", new PasswordDto());
+        return "change-password";
+    }
+
+    @PostMapping("/changePassword")
+    public String changePassword(@ModelAttribute("passwordDto") @Valid PasswordDto passwordDto,
+                                 BindingResult bindingResult,
+                                 RedirectAttributes redirectAttributes) {
+
+        if (bindingResult.hasErrors()) {
+            return "change-password";
+        }
+
+        if (!userService.validateOldPassword(passwordDto)) {
+            redirectAttributes.addFlashAttribute("oldPasswordError", "Old password is wrong");
+            return "redirect:/changePassword";
+        }
+
+        if (!userService.validateNewPasswords(passwordDto)) {
+            redirectAttributes.addFlashAttribute("newPasswordsError", "New Passwords do not match");
+            return "redirect:/changePassword";
+        }
+
+        userService.changePassword(passwordDto);
+
+        redirectAttributes.addFlashAttribute("alert", "Password changed successfully");
         return "redirect:/home";
     }
 
