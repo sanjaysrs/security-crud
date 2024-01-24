@@ -20,7 +20,7 @@
           <a class="nav-link" href="/home">Home</a>
         </li>
         <li sec:authorize="hasRole('ADMIN')" class="nav-item">
-          <a class="nav-link" href="/admin">Home</a>
+          <a class="nav-link" href="/admin">Admin</a>
         </li>
         <li sec:authorize="!isAuthenticated()" class="nav-item">
           <a class="nav-link" href="/login">Login</a>
