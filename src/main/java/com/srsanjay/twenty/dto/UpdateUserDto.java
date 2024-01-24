@@ -4,13 +4,7 @@ import com.srsanjay.twenty.model.User;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 
-public class UserDto {
-
-    @NotBlank(message = "Username cannot be blank")
-    private String username;
-
-    @NotBlank(message = "Password cannot be blank")
-    private String password;
+public class UpdateUserDto {
 
     @NotBlank(message = "First name cannot be blank")
     private String firstName;
@@ -23,21 +17,16 @@ public class UserDto {
             message = "Not a valid email")
     private String email;
 
-    public String getUsername() {
-        return username;
+    public UpdateUserDto() {
+
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public UpdateUserDto(User user) {
+        this.firstName = user.getFirstName();
+        this.lastName = user.getLastName();
+        this.email = user.getEmail();
     }
 
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
 
     public String getFirstName() {
         return firstName;
@@ -62,4 +51,5 @@ public class UserDto {
     public void setEmail(String email) {
         this.email = email;
     }
+
 }
