@@ -23,5 +23,24 @@
     </div>
   </nav>
   <h1>Welcome to the admin panel</h1>
+  <table>
+    <thead>
+      <tr>
+        <th>Id</th>
+        <th>Username</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr th:each="user : ${users}">
+        <td th:text="${user.id}"></td>
+        <td th:text="${user.username}"></td>
+        <td>
+          <a>Disable</a>
+          <a>Delete</a>
+        </td>
+      </tr>
+    </tbody>
+  </table>
 </body>
 </html>
