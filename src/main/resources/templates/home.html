@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,6 +8,21 @@
 </head>
 <body>
   <h1>Welcome user</h1>
+
+  <p>
+    Username: <span sec:authentication="principal.username"></span>
+    <br><br>
+    Role: <span sec:authentication="principal.authorities"></span>
+  </p>
+
+  <hr>
+
+  <div th:if="${session.user}" >
+    <p th:text="'Username: ' + ${session.user.username}"></p>
+    <p th:text="'Password: ' + ${session.user.password}"></p>
+    <p th:text="'Id: ' + ${session.user.id}"></p>
+    <p th:text="'Role: ' + ${session.user.role}"></p>
+  </div>
 
   <a href="/logout">Logout</a>
 </body>
