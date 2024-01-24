@@ -8,6 +8,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class UserService {
@@ -36,6 +37,30 @@ public class UserService {
 
     public void deleteById(Integer id) {
         userRepository.deleteById(id);
+    }
+
+    public void disableById(Integer id) {
+
+        Optional<User> userOptional = userRepository.findById(id);
+
+        if (userOptional.isEmpty())
+            return;
+
+        User user = userOptional.get();
+        user.setEnabled(false);
+        userRepository.save(user);
+    }
+
+    public void enableById(Integer id) {
+
+        Optional<User> userOptional = userRepository.findById(id);
+
+        if (userOptional.isEmpty())
+            return;
+
+        User user = userOptional.get();
+        user.setEnabled(true);
+        userRepository.save(user);
     }
 
 }
