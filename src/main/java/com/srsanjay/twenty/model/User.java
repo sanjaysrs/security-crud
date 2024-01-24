@@ -21,7 +21,8 @@ public class User {
     @Column(unique = true)
     private String email;
 
-    private String role;
+    @Enumerated(EnumType.STRING)
+    private UserRole role;
 
     private boolean enabled;
 
@@ -49,11 +50,11 @@ public class User {
         this.password = password;
     }
 
-    public String getRole() {
+    public UserRole getRole() {
         return role;
     }
 
-    public void setRole(String role) {
+    public void setRole(UserRole role) {
         this.role = role;
     }
 

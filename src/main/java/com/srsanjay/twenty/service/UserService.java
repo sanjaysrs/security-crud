@@ -4,6 +4,7 @@ import com.srsanjay.twenty.dto.PasswordDto;
 import com.srsanjay.twenty.dto.UpdateUserDto;
 import com.srsanjay.twenty.dto.UserDto;
 import com.srsanjay.twenty.model.User;
+import com.srsanjay.twenty.model.UserRole;
 import com.srsanjay.twenty.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -33,7 +34,10 @@ public class UserService {
         User user = new User();
         user.setUsername(userDto.getUsername());
         user.setPassword(passwordEncoder.encode(userDto.getPassword()));
-        user.setRole("ROLE_USER");
+        user.setFirstName(userDto.getFirstName());
+        user.setLastName(userDto.getLastName());
+        user.setEmail(userDto.getEmail());
+        user.setRole(UserRole.ROLE_USER);
         user.setEnabled(true);
         userRepository.save(user);
     }
