@@ -25,7 +25,7 @@ public class HomeController {
             return "redirect:/home";
 
         if (getCurrentUserRole().equals("[ROLE_ADMIN]"))
-            return "admin";
+            return "redirect:/admin";
 
         return "redirect:/login";
     }

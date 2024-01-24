@@ -19,12 +19,13 @@ public class SecurityConfig {
 
         http.authorizeHttpRequests(request ->
                         request.requestMatchers("/", "/register", "/login/**").permitAll()
+                                .requestMatchers("/success").hasAnyRole("USER", "ADMIN")
                                 .requestMatchers("/home").hasRole("USER")
                                 .requestMatchers("/admin").hasRole("ADMIN")
                                 .anyRequest().authenticated())
                 .formLogin(form -> form
                         .loginPage("/login")
-                        .defaultSuccessUrl("/home")
+                        .defaultSuccessUrl("/success")
                         .failureUrl("/login/failure"))
                 .logout(logout -> logout.logoutSuccessUrl("/login/logout"))
                 .csrf(csrf -> csrf.disable());
