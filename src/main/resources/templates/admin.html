@@ -33,6 +33,9 @@
     <tr>
       <th>Id</th>
       <th>Username</th>
+      <th>Email</th>
+      <th>First Name</th>
+      <th>Last Name</th>
       <th>Actions</th>
     </tr>
     </thead>
@@ -40,6 +43,9 @@
     <tr th:each="user : ${users}">
       <td th:text="${user.id}"></td>
       <td th:text="${user.username}"></td>
+      <td th:text="${user.email}"></td>
+      <td th:text="${user.firstName}"></td>
+      <td th:text="${user.lastName}"></td>
       <td>
         <a th:if="${user.enabled}" th:href="@{/admin/disable(id=${user.id})}" class="btn btn-warning btn-sm">Disable</a>
         <a th:if="${!user.enabled}" th:href="@{/admin/enable(id=${user.id})}" class="btn btn-success btn-sm">Enable</a>
