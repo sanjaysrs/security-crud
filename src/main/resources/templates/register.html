@@ -25,6 +25,7 @@
     <div class="mb-3">
       <input type="text" th:field="*{username}" class="form-control" placeholder="Username">
       <div th:if="${#fields.hasErrors('username')}" class="text-danger" th:errors="*{username}"></div>
+      <div th:if="${error}" class="text-danger" th:text="${error}"></div>
     </div>
     <div class="mb-3">
       <input type="text" th:field="*{firstName}" class="form-control" placeholder="First Name">

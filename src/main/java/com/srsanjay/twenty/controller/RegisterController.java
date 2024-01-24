@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Controller
@@ -31,9 +32,18 @@ public class RegisterController {
 
     @PostMapping("/register")
     public String register(@Valid @ModelAttribute("user") UserDto userDto,
-                           BindingResult bindingResult) {
+                           BindingResult bindingResult,
+                           Model model) {
 
         if (bindingResult.hasErrors()) {
+            model.addAttribute("user", userDto);
+            return "register";
+        }
+
+        Optional<User> existing = userService.findByUsername(userDto.getUsername());
+        if (existing.isPresent()) {
+            model.addAttribute("error", "Username " + userDto.getUsername() + " is not available");
+            model.addAttribute("user", userDto);
             return "register";
         }
 

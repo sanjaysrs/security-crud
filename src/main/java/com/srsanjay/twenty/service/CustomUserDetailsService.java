@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class CustomUserDetailsService implements UserDetailsService {
@@ -23,12 +24,12 @@ public class CustomUserDetailsService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 
-        List<User> users = userRepository.findByUsername(username);
+        Optional<User> userOptional = userRepository.findByUsername(username);
 
-        if (users.isEmpty())
+        if (userOptional.isEmpty())
             throw new RuntimeException("Invalid username");
 
-        User user = users.get(0);
+        User user = userOptional.get();
 
         if (!user.isEnabled())
             throw new DisabledException("User is disabled");
