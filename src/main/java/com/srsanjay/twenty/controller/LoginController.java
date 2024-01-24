@@ -1,5 +1,7 @@
 package com.srsanjay.twenty.controller;
 
+import jakarta.servlet.http.HttpSession;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,9 +18,11 @@ public class LoginController {
     }
 
     @GetMapping("/failure")
-    public String login(RedirectAttributes redirectAttributes) {
+    public String login(RedirectAttributes redirectAttributes, HttpSession session) {
 
-        redirectAttributes.addFlashAttribute("error", "Invalid username or password");
+        Exception exception = (Exception) session.getAttribute("SPRING_SECURITY_LAST_EXCEPTION");
+        String error = exception instanceof BadCredentialsException ? "Invalid password" : exception.getMessage();
+        redirectAttributes.addFlashAttribute("error", error);
         return "redirect:/login";
     }
 

@@ -3,6 +3,7 @@ package com.srsanjay.twenty.service;
 import com.srsanjay.twenty.repository.UserRepository;
 import com.srsanjay.twenty.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -25,9 +26,13 @@ public class CustomUserDetailsService implements UserDetailsService {
         List<User> users = userRepository.findByUsername(username);
 
         if (users.isEmpty())
-            throw new UsernameNotFoundException("UserDto not registered");
+            throw new RuntimeException("Invalid username");
 
         User user = users.get(0);
+
+        if (!user.isEnabled())
+            throw new DisabledException("User is disabled");
+
         String password = user.getPassword();
 
         List<GrantedAuthority> authorities = new ArrayList<>();
