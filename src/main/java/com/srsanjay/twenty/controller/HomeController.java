@@ -41,8 +41,10 @@ public class HomeController {
 
     @GetMapping("/home")
     public String home(HttpSession session, Principal principal) {
-        User user = userService.findByUsername(principal.getName()).get();
-        session.setAttribute("user", user);
+        if (session.getAttribute("user")==null) {
+            User user = userService.findByUsername(principal.getName()).get();
+            session.setAttribute("user", user);
+        }
         return "home";
     }
 
