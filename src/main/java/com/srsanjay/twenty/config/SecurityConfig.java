@@ -22,9 +22,9 @@ public class SecurityConfig {
                         request.requestMatchers("/").permitAll()
                                 .requestMatchers("/register/**", "/login/**").anonymous()
                                 .requestMatchers("/success").authenticated()
-                                .requestMatchers("/home", "/update").hasRole("USER")
+                                .requestMatchers("/home", "/update", "/changePassword").hasRole("USER")
                                 .requestMatchers("/admin/**").hasRole("ADMIN")
-                                .anyRequest().authenticated())
+                                .anyRequest().permitAll())
                 .formLogin(form -> form
                         .loginPage("/login")
                         .defaultSuccessUrl("/success")
