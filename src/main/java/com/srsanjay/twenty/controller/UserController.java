@@ -42,20 +42,21 @@ public class UserController {
     @GetMapping("/update")
     public String update(Model model) {
         User user = userService.findByUsername(getCurrentUsername()).orElse(null);
-        model.addAttribute("user", new UpdateUserDto(user));
+        if (!model.containsAttribute("user"))
+            model.addAttribute("user", new UpdateUserDto(user));
         return "update-profile";
     }
 
     @PostMapping("/update")
     public String update(@Valid @ModelAttribute("user") UpdateUserDto updateUserDto,
                          BindingResult bindingResult,
-                         Model model,
                          RedirectAttributes redirectAttributes,
                          HttpSession session) {
 
         if (bindingResult.hasErrors()) {
-            model.addAttribute("user", updateUserDto);
-            return "update-profile";
+            redirectAttributes.addFlashAttribute("user", updateUserDto);
+            redirectAttributes.addFlashAttribute("org.springframework.validation.BindingResult.user", bindingResult);
+            return "redirect:/update";
         }
 
         userService.update(updateUserDto);
