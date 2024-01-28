@@ -9,45 +9,51 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Controller
+@RequestMapping("/register")
 public class RegisterController {
 
     @Autowired
     UserService userService;
 
-    @GetMapping("/register")
+    @GetMapping
     public String register(Model model) {
-        model.addAttribute("user", new UserDto());
+        if (!model.containsAttribute("user"))
+            model.addAttribute("user", new UserDto());
         return "register";
     }
 
-    @PostMapping("/register")
+    @PostMapping
     public String register(@Valid @ModelAttribute("user") UserDto userDto,
                            BindingResult bindingResult,
-                           Model model) {
+                           RedirectAttributes redirectAttributes) {
 
         if (bindingResult.hasErrors()) {
-            model.addAttribute("user", userDto);
-            return "register";
+            redirectAttributes.addFlashAttribute("user", userDto);
+            redirectAttributes.addFlashAttribute("org.springframework.validation.BindingResult.user", bindingResult);
+            return "redirect:/register";
         }
 
         Optional<User> existing = userService.findByUsername(userDto.getUsername());
         if (existing.isPresent()) {
-            model.addAttribute("error", "Username " + userDto.getUsername() + " is not available");
-            model.addAttribute("user", userDto);
-            return "register";
+            redirectAttributes.addFlashAttribute("error", "Username " + userDto.getUsername() + " is not available");
+            redirectAttributes.addFlashAttribute("user", userDto);
+            return "redirect:/register";
         }
 
         userService.save(userDto);
+        return "redirect:/register/confirm";
+    }
+
+    @GetMapping("/confirm")
+    public String confirmRegistration() {
         return "confirm-register";
     }
 

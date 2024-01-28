@@ -10,6 +10,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint;
 
 @Configuration
 public class SecurityConfig {
@@ -18,8 +19,9 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
         http.authorizeHttpRequests(request ->
-                        request.requestMatchers("/", "/register", "/login/**").permitAll()
-                                .requestMatchers("/success").hasAnyRole("USER", "ADMIN")
+                        request.requestMatchers("/").permitAll()
+                                .requestMatchers("/register/**", "/login/**").anonymous()
+                                .requestMatchers("/success").authenticated()
                                 .requestMatchers("/home", "/update").hasRole("USER")
                                 .requestMatchers("/admin/**").hasRole("ADMIN")
                                 .anyRequest().authenticated())
@@ -28,6 +30,9 @@ public class SecurityConfig {
                         .defaultSuccessUrl("/success")
                         .failureUrl("/login/failure"))
                 .logout(logout -> logout.logoutSuccessUrl("/login/logout"))
+                .exceptionHandling(customizer ->
+                        customizer.accessDeniedHandler((request, response, accessDeniedException) ->
+                                response.sendRedirect("/")))
                 .csrf(csrf -> csrf.disable());
 
         return http.build();
