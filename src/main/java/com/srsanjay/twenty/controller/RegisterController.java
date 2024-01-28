@@ -44,8 +44,7 @@ public class RegisterController {
             return "redirect:/register";
         }
 
-        Optional<User> existing = userService.findByUsername(userDto.getUsername());
-        if (existing.isPresent()) {
+        if (userExists(userDto.getUsername())) {
             redirectAttributes.addFlashAttribute("error", "Username " + userDto.getUsername() + " is not available");
             redirectAttributes.addFlashAttribute("user", userDto);
             return "redirect:/register";
@@ -68,6 +67,11 @@ public class RegisterController {
 
         return "redirect:/";
 
+    }
+
+    private boolean userExists(String username) {
+        Optional<User> existing = userService.findByUsername(username);
+        return existing.isPresent();
     }
 
     private UUID generateToken() {
