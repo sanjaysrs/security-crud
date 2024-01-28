@@ -68,7 +68,8 @@ public class UserController {
 
     @GetMapping("/changePassword")
     public String changePassword(Model model) {
-        model.addAttribute("passwordDto", new PasswordDto());
+        if (!model.containsAttribute("passwordDto"))
+            model.addAttribute("passwordDto", new PasswordDto());
         return "change-password";
     }
 
@@ -78,7 +79,9 @@ public class UserController {
                                  RedirectAttributes redirectAttributes) {
 
         if (bindingResult.hasErrors()) {
-            return "change-password";
+            redirectAttributes.addFlashAttribute("org.springframework.validation.BindingResult.passwordDto", bindingResult);
+            redirectAttributes.addFlashAttribute("passwordDto", passwordDto);
+            return "redirect:/changePassword";
         }
 
         if (!userService.validateOldPassword(passwordDto)) {
