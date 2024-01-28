@@ -30,6 +30,7 @@
         h1 {
             font-size: 100px;
             margin-bottom: 20px;
+            animation: glow 1.5s infinite alternate;
         }
 
         p {
@@ -38,15 +39,35 @@
         }
 
         .btn-primary {
-            background-color: #dc3545;
-            border-color: #dc3545;
+            background-color: #6c757d;
+            border-color: #6c757d;
+            color: #fff;
             font-size: 20px;
             padding: 10px 20px;
+            animation: pulse 1s infinite;
         }
 
         .btn-primary:hover {
-            background-color: #c82333;
-            border-color: #bd2130;
+            background-color: #5a6268;
+            border-color: #545b62;
+        }
+
+        @keyframes glow {
+            from {
+                text-shadow: 0 0 10px #6c757d, 0 0 20px #6c757d, 0 0 30px #6c757d;
+            }
+            to {
+                text-shadow: 0 0 20px #6c757d, 0 0 30px #6c757d, 0 0 40px #6c757d;
+            }
+        }
+
+        @keyframes pulse {
+            from {
+                transform: scale(1);
+            }
+            to {
+                transform: scale(1.1);
+            }
         }
     </style>
 </head>
