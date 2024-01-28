@@ -3,6 +3,7 @@ package com.srsanjay.twenty.controller;
 import com.srsanjay.twenty.dto.UserDto;
 import com.srsanjay.twenty.model.User;
 import com.srsanjay.twenty.service.UserService;
+import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -14,6 +15,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Controller
@@ -33,7 +35,8 @@ public class RegisterController {
     @PostMapping
     public String register(@Valid @ModelAttribute("user") UserDto userDto,
                            BindingResult bindingResult,
-                           RedirectAttributes redirectAttributes) {
+                           RedirectAttributes redirectAttributes,
+                           HttpSession session) {
 
         if (bindingResult.hasErrors()) {
             redirectAttributes.addFlashAttribute("user", userDto);
@@ -49,12 +52,30 @@ public class RegisterController {
         }
 
         userService.save(userDto);
+        UUID token = generateToken();
+        session.setAttribute("token", token);
+        redirectAttributes.addFlashAttribute("token", token);
         return "redirect:/register/confirm";
     }
 
     @GetMapping("/confirm")
-    public String confirmRegistration() {
-        return "confirm-register";
+    public String confirmRegistration(HttpSession session, Model model) {
+
+        if (isValidToken(session.getAttribute("token"), model.getAttribute("token"))) {
+            session.removeAttribute("token");
+            return "confirm-register";
+        }
+
+        return "redirect:/";
+
+    }
+
+    private UUID generateToken() {
+        return UUID.randomUUID();
+    }
+
+    private boolean isValidToken(Object sessionToken, Object modelToken) {
+        return  (sessionToken != null && sessionToken.equals(modelToken));
     }
 
 }
