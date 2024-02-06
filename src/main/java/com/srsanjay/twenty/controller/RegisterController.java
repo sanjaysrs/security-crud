@@ -35,8 +35,7 @@ public class RegisterController {
     @PostMapping
     public String register(@Valid @ModelAttribute("user") UserDto userDto,
                            BindingResult bindingResult,
-                           RedirectAttributes redirectAttributes,
-                           HttpSession session) {
+                           RedirectAttributes redirectAttributes) {
 
         if (bindingResult.hasErrors()) {
             redirectAttributes.addFlashAttribute("user", userDto);
@@ -51,17 +50,14 @@ public class RegisterController {
         }
 
         userService.save(userDto);
-        UUID token = generateToken();
-        session.setAttribute("token", token);
-        redirectAttributes.addFlashAttribute("token", token);
+        redirectAttributes.addFlashAttribute("token", "token");
         return "redirect:/register/confirm";
     }
 
     @GetMapping("/confirm")
-    public String confirmRegistration(HttpSession session, Model model) {
+    public String confirmRegistration(Model model) {
 
-        if (isValidToken(session.getAttribute("token"), model.getAttribute("token"))) {
-            session.removeAttribute("token");
+        if (model.containsAttribute("token")) {
             return "confirm-register";
         }
 
@@ -72,14 +68,6 @@ public class RegisterController {
     private boolean userExists(String username) {
         Optional<User> existing = userService.findByUsername(username);
         return existing.isPresent();
-    }
-
-    private UUID generateToken() {
-        return UUID.randomUUID();
-    }
-
-    private boolean isValidToken(Object sessionToken, Object modelToken) {
-        return  (sessionToken != null && sessionToken.equals(modelToken));
     }
 
 }
